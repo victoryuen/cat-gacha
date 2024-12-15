@@ -1,0 +1,72 @@
+:root{
+    --primary-color: #BAD7F2;
+    --secondary-color: #BAF2D8;
+    --text-color: #333333;
+    
+    --mint-celadon: #BAF2BB;
+    --mint-celadon-dark: #BAF2D8;
+    --columbia-blue: #BAD7F2;
+    --orchid-pink: #F2BAC9;
+    --tea-green: #E8F8C1;
+}
+#section-login {
+
+    display: flex ;
+    flex-direction: row ;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+body{
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+.navbar{
+    background-color: var(--secondary-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--text-color) !important;
+}
+
+.nav-link {
+    color: var(--text-color) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+    transform: translateY(-2px);
+}
+
+.nav-link.active {
+    color: var(--primary-color) !important;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.btn-outline-light {
+    border-color: var(--text-color);
+    color: var(--text-color);
+}
+
+.btn-outline-light:hover {
+    background-color: var(--text-color);
+    color: var(--secondary-color);
+}
+
+.btn-light {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--text-color);
+}
+
+.btn-light:hover {
+    background-color: var(--columbia-blue);
+    transform: translateY(-2px);
+}
