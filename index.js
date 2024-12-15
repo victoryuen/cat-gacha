@@ -1,10 +1,10 @@
 const express = require("express");
 app = express();
 const hostname = "127.0.0.1";
-const port = 3000;
+const port = 5500;
 
 app.get('/',(req,res) => {
-    res.send("Hello World");
+    res.render('index',{username:'John Doe'})
 })
 
 app.listen(port,()=>{
