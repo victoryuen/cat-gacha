@@ -1,41 +1,50 @@
-:root{
+:root {
     --primary-color: #BAD7F2;
     --secondary-color: #BAF2D8;
     --text-color: #333333;
-    
+
     --mint-celadon: #BAF2BB;
     --mint-celadon-dark: #BAF2D8;
     --columbia-blue: #BAD7F2;
     --orchid-pink: #F2BAC9;
     --tea-green: #E8F8C1;
 }
+
 #section-login {
 
-    display: flex ;
-    flex-direction: row ;
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
     margin-left: 10px;
 }
 
-body{
+body {
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600 bold;
+    font-style: normal;
     background-color: var(--primary-color);
     color: var(--text-color);
 }
-.navbar{
+
+.navbar {
     background-color: var(--secondary-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem 0;
 }
 
 .navbar-brand {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.5rem;
+    display: flex;
+    align-items: center;
     color: var(--text-color) !important;
+    gap: 10px;
 }
 
 .nav-link {
     color: var(--text-color) !important;
-    font-weight: 500;
+    font-weight: 700;
     padding: 0.5rem 1rem !important;
     transition: all 0.3s ease;
 }
@@ -69,4 +78,22 @@ body{
 .btn-light:hover {
     background-color: var(--columbia-blue);
     transform: translateY(-2px);
+}
+
+.comfortaa-font {
+    font-family: "Comfortaa", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+#text-cat-gacha {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.middle-container {
+    padding: 40px 15px;
+    text-align: center;
 }
