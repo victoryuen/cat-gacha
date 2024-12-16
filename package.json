@@ -1,5 +1,9 @@
 {
+  "name": "cat-gacha",
+  "version": "1.0.0",
+  "type": "module",
   "dependencies": {
+    "connect-flash": "^0.1.1",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "pg": "^8.13.1"
@@ -10,6 +14,6 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "dev": "browser-sync start --proxy 'localhost:5500' --files 'public/**/*.css, views/**/*.ejs'"
+    "dev": "browser-sync start --proxy localhost:5500 --files \"public/**/*.css, views/**/*.ejs\""
   }
 }

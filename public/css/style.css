@@ -97,3 +97,53 @@ body {
     padding: 40px 15px;
     text-align: center;
 }
+
+#cat-icon-banner {
+    width: 50%;
+    height: 50%;
+}
+
+#signup-container {
+    font-family: "Comfortaa", sans-serif;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#signup-form-group {
+    margin-bottom: 15px;
+}
+
+#signup-label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+#signup-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--columbia-blue);
+    border-radius: 4px;
+    background-color: var(--mint-celadon);
+}
+
+#signup-button {
+    background-color: var(--mint-celadon);
+    color: var(--text-color);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Comfortaa", sans-serif;
+}
+
+#signup-button:hover {
+    background-color: var(--mint-celadon-dark);
+    transform: translateY(-2px);
+}
+
+#signup-error {
+    color: var(--orchid-pink);
+    margin-bottom: 10px;
+}

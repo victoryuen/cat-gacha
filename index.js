@@ -1,16 +1,55 @@
-const express = require("express");
-app = express();
+import express from "express";
+import pg from "pg";
+const db = new pg.Client({
+    user: "postgres",
+    host: "localhost",
+    database: "cat_gacha_local",
+    password: "12345",
+    port: 5432,
+});
+db.connect();
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 const hostname = "127.0.0.1";
 const port = 5500;
 
-app.use(express.static('public'))
-app.get('/',(req,res) => {
-    res.render('index',{username:'John Doe'})
+
+app.get('/', (req, res) => {
+    res.render('index', { username: 'John Doe' })
 })
 
-app.listen(port,()=>{
+app.get('/signup', (req, res) => {
+    res.render('signup');
+});
+app.post('/signup', async (req, res) => {
+    const { username, email, password, confirmPassword } = req.body;
+    try {
+        const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+        if (result.rowCount > 0) {
+            res.render('signup', { error: 'Username already exists' });
+        }
+    } catch (err) {
+        console.error('Error executing query:', err);
+    }
+    if (password != confirmPassword) {
+        res.render('signup', { error: 'Password must be the same!' })
+    }
+    try {
+        const result = await db.query(
+            'INSERT INTO users (username, email,password) VALUES ($1, $2,$3) RETURNING *',
+            [username, email, password]
+        );
+    } catch (err) {
+        console.error('Error executing query:', err);
+    }
+
+
+});
+
+app.listen(port, () => {
     console.log(`Express server listening on port ${port} `)
-})
+});
 
 
-app.set('view engine','ejs')
+app.set('view engine', 'ejs');
