@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Montserrat:wght@400&display=swap"
+        rel="stylesheet">
+    <title>Gacha</title>
+</head>
+
+<body>
+    <%- include('partials/nav') %>
+        <div class="middle-container">
+            <h1>Roll the Gacha!</h1>
+            <div class="gacha-container">
+                <button id="gacha-button" class="btn btn-primary btn-lg">Roll</button>
+                <div id="gacha-collection-button" style="display: none;">
+                    <form action="/api/collect" method="POST">
+                        <button type="submit" class="btn btn-primary">Add to Collection</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="loader" style="display: none;">
+                <div class="spinner"></div>
+                <div id="rolling-pet" style="font-size: 20px; font-weight: bold;">Rolling Pet...</div>
+            </div>
+            <div id="cat-image-response-container" style="display: none;">
+                <div id="cat-image-response-text">
+                </div>
+                <div id="cat-image-response-image">
+                    <img src="" alt="Cat Image" id="cat-image">
+                </div>
+                <div id="cat-image-response-button">
+
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="/js/gacha.js"></script>
+</body>
+
+</html>

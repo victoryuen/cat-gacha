@@ -6,3 +6,15 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS user_cats (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    cat_name VARCHAR(50) NOT NULL,
+    cat_image VARCHAR(255) NOT NULL,    
+    cat_type VARCHAR(50) NOT NULL,
+    cat_description TEXT NOT NULL,
+    cat_rarity VARCHAR(50) NOT NULL,
+    cat_price INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

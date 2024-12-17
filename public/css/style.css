@@ -147,3 +147,80 @@ body {
     color: var(--orchid-pink);
     margin-bottom: 10px;
 }
+
+#loader {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    margin-top: 100px;
+    display: inline-block;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#cat-image {
+    max-width: 600px;
+    max-height: 600px;
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+    border-radius: 10%;
+}
+
+#gacha-button {
+    background-color: var(--mint-celadon);
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+#gacha-button:hover {
+    background-color: var(--mint-celadon-dark);
+
+}
+
+.cat-stats-box {
+    background-color: var(--mint-celadon);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 20px auto;
+    max-width: 600px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cat-stat-item {
+    padding: 2px;
+    border-bottom: 1px solid var(--columbia-blue);
+}
+
+.cat-stat-label {
+    font-weight: 700;
+    color: var(--text-color);
+    margin-right: 10px;
+}
+
+#gacha-container {
+    display: flex;
+}
