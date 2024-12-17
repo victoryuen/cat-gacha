@@ -99,8 +99,8 @@ body {
 }
 
 #cat-icon-banner {
-    width: 50%;
-    height: 50%;
+    width: 30%;
+    height: 30%;
 }
 
 #signup-container {
@@ -223,4 +223,21 @@ body {
 
 #gacha-container {
     display: flex;
+}
+
+#collection-button {
+    background-color: var(--orchid-pink);
+    color: var(--text-color);
+}
+
+#collection-button:hover {
+    background-color: var(--text-color);
+    color: var(--secondary-color);
+}
+
+#logged-in-text {
+    margin-top: 10px;
+    margin-right: 10px;
+    color: var(--text-color);
+    font-weight: 700;
 }
