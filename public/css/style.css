@@ -50,13 +50,13 @@ body {
 }
 
 .nav-link:hover {
-    color: var(--primary-color) !important;
+    color: var(--orchid-pink) !important;
     transform: translateY(-2px);
 }
 
 .nav-link.active {
-    color: var(--primary-color) !important;
-    border-bottom: 2px solid var(--primary-color);
+    color: var(--orchid-pink) !important;
+    border-bottom: 2px solid var(--orchid-pink);
 }
 
 .btn-outline-light {
@@ -240,4 +240,53 @@ body {
     margin-right: 10px;
     color: var(--text-color);
     font-weight: 700;
+}
+
+#login-required {
+    color: var(--text-color);
+    margin-top: 10px;
+    font-weight: 700;
+    text-align: center;
+    padding: 20px;
+}
+
+.cat-collection-img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+    border-radius: 10%;
+}
+
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.cat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.cat-card:hover {
+    transform: translateY(-5px);
+}
+
+.cat-collection-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cat-card h2 {
+    margin: 10px 0;
+    text-align: center;
+    font-size: 1.2em;
 }

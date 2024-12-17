@@ -13,11 +13,15 @@ db.connect();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public')); // serve static files
+app.use(express.json());
 app.use(expressSession({
     secret: 'session_secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: {
+        secure: false,
+
+    }
 }));
 
 const hostname = "127.0.0.1";
@@ -27,7 +31,8 @@ const port = 5500;
 app.get('/', (req, res) => { // render index page
     res.render('index', {
         username: req.session.username,
-        loggedIn: req.session.loggedIn || false
+        loggedIn: req.session.loggedIn || false,
+        active: 'home'
     });
 })
 
@@ -54,6 +59,7 @@ app.post('/signup', async (req, res) => { // handle signup POST request
             'INSERT INTO users (username, email,password) VALUES ($1, $2,$3) RETURNING *',
             [username, email, password]
         );
+        res.redirect('/login');
     } catch (err) {
         console.error('Error executing query:', err);
     }
@@ -87,17 +93,37 @@ app.post('/login', async (req, res) => { // handle login POST request
 app.get('/gacha', (req, res) => { // render gacha page
     res.render('gacha', {
         loggedIn: req.session.loggedIn || false,
-        username: req.session.username
+        username: req.session.username,
+        active: 'gacha'
     });
 })
 app.post('/api/collect', async (req, res) => {
     try {
         const catData = req.body;
-        const result = await db.query('INSERT INTO collection (name, origin, temperament, description, image_url) VALUES ($1, $2, $3, $4, $5) RETURNING *', [catData.name, catData.origin, catData.temperament, catData.description, catData.imageUrl]);
+        console.log("line 99", catData);
+        //     cat_name VARCHAR(50) NOT NULL,
+        // cat_breed VARCHAR(50) NOT NULL,
+        // cat_origin VARCHAR(50) NOT NULL,
+        // cat_image VARCHAR(255) NOT NULL,    
+        // cat_types VARCHAR[] NOT NULL,
+        // cat_description TEXT NOT NULL,
+        const result = await db.query(
+            'INSERT INTO user_cats (user_id,cat_name, cat_breed, cat_origin, cat_image, cat_types, cat_description) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [req.session.userId, catData.cat_name, catData.cat_breed, catData.cat_origin, catData.cat_image, catData.cat_types, catData.cat_description]
+        );
         res.json({ success: true, cat: result.rows[0] });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
+});
+app.get('/collection', async (req, res) => {
+    const result = await db.query('SELECT * FROM user_cats WHERE user_id = $1', [req.session.userId]);
+    res.render('collection', {
+        loggedIn: req.session.loggedIn || false,
+        username: req.session.username,
+        cats: result.rows,
+        active: 'collection'
+    });
 });
 app.post('/logout', (req, res) => {
     req.session.destroy();

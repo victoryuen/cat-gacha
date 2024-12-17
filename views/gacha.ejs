@@ -16,37 +16,63 @@
 
 <body>
     <%- include('partials/nav') %>
-        <div class="middle-container">
-            <h1>Roll the Gacha!</h1>
-            <div class="gacha-container">
-                <button id="gacha-button" class="btn btn-primary btn-lg">Roll</button>
-                <div id="collection-section" style="display: none;">
-                    <form action="/api/collect" method="POST">
-                        <button type="submit" class="btn btn-primary btn-lg" id="collection-button">Add to
-                            Collection</button>
-                    </form>
+        <% if (locals.loggedIn) { %>
+            <div class="middle-container">
+                <h1>Roll the Gacha!</h1>
+                <div class="gacha-container">
+                    <button id="gacha-button" class="btn btn-primary btn-lg">Roll</button>
+                    <div id="collection-section" style="display: none;">
+                        <form action="/api/collect" method="POST" id="collect-form">
+                            <input type="hidden" name="catData" id="catData">
+                            <button type="submit" class="btn btn-primary btn-lg" id="collection-button">Add to
+                                Collection</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="loader" style="display: none;">
+                    <div class="spinner"></div>
+                    <div id="rolling-pet" style="font-size: 20px; font-weight: bold;">Rolling Pet...</div>
+                </div>
+                <div id="cat-image-response-container" style="display: none;">
+                    <div id="cat-image-response-text">
+                    </div>
+                    <div id="cat-image-response-image">
+                        <img src="" alt="Cat Image" id="cat-image">
+                    </div>
+                    <div id="cat-image-response-button">
+
+                    </div>
                 </div>
             </div>
 
-            <div id="loader" style="display: none;">
-                <div class="spinner"></div>
-                <div id="rolling-pet" style="font-size: 20px; font-weight: bold;">Rolling Pet...</div>
+            <div class="modal fade" id="nameModal" tabi ndex="-1" aria-labelledby="nameModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="nameModalLabel">Name Your Cat</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" id="catName" placeholder="Enter cat's name">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="saveCatName">Save</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="cat-image-response-container" style="display: none;">
-                <div id="cat-image-response-text">
-                </div>
-                <div id="cat-image-response-image">
-                    <img src="" alt="Cat Image" id="cat-image">
-                </div>
-                <div id="cat-image-response-button">
 
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="/js/gacha.js"></script>
+            <% } else { %>
+                <div id="login-required">
+                    <h1>Please login to play the gacha
+                    </h1>
                 </div>
-            </div>
-        </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="/js/gacha.js"></script>
+                <% } %>
 </body>
 
 </html>

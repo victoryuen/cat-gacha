@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS user_cats CASCADE;
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -11,10 +12,10 @@ CREATE TABLE IF NOT EXISTS user_cats (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id),
     cat_name VARCHAR(50) NOT NULL,
+    cat_breed VARCHAR(50) NOT NULL,
+    cat_origin VARCHAR(50) NOT NULL,
     cat_image VARCHAR(255) NOT NULL,    
-    cat_type VARCHAR(50) NOT NULL,
+    cat_types VARCHAR[] NOT NULL,
     cat_description TEXT NOT NULL,
-    cat_rarity VARCHAR(50) NOT NULL,
-    cat_price INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

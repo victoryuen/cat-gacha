@@ -17,15 +17,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">Home</a>
+                    <a class="nav-link <%= locals.active === 'home' ? 'active' : '' %>" href="/">Home</a>
                 </li>
                 <% if (locals.loggedIn) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="/collection">Collection</a>
+                        <a class="nav-link <%= locals.active === 'collection' ? 'active' : '' %>"
+                            href="/collection">Collection</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="/gacha">Play Gacha</a>
+                        <a class="nav-link <%= locals.active === 'gacha' ? 'active' : '' %>" href="/gacha">Play
+                            Gacha</a>
                     </li>
                     <% } %>
             </ul>

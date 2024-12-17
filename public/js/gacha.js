@@ -20,11 +20,11 @@ const rollGacha = async () => {
 
         const catData = response.data[0];
         currentCatData = {
-            name: catData.breeds[0].name,
-            origin: catData.breeds[0].origin,
-            temperament: catData.breeds[0].temperament,
-            description: catData.breeds[0].description,
-            imageUrl: catData.url
+            cat_breed: catData.breeds[0].name,
+            cat_origin: catData.breeds[0].origin,
+            cat_types: catData.breeds[0].temperament.split(','),
+            cat_description: catData.breeds[0].description,
+            cat_image: catData.url
         };
 
         console.log(catData);
@@ -58,8 +58,21 @@ const handleCollect = async (event) => {
     event.preventDefault();
     if (!currentCatData) return;
 
+    const customName = prompt('Give your cat a name:', currentCatData.name);
+
+    if (customName === null) return; // User clicked Cancel
+
     try {
-        const response = await axios.post('/api/collect', currentCatData);
+        const catDataWithCustomName = {
+            ...currentCatData,
+            cat_name: customName
+        };
+        console.log(catDataWithCustomName);
+        const response = await axios.post('/api/collect', catDataWithCustomName, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         if (response.data.success) {
             alert('Cat added to collection!');
             gacha_collection_btn.style.display = 'none';
@@ -77,5 +90,5 @@ cat_api_section = document.querySelector('#cat-image-response-container')
 const loader = document.querySelector('#loader');
 gacha_collection_btn = document.querySelector('#collection-section');
 
-gacha_btn.addEventListener('click', rollGacha);
-document.querySelector('#collection-section form').addEventListener('submit', handleCollect);
+gacha_btn.addEventListener('click', rollGacha)
+gacha_collection_btn.addEventListener('submit', handleCollect);
