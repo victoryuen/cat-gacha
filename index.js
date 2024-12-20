@@ -12,7 +12,7 @@ const db = new pg.Client({
 db.connect();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public')); // serve static files
+app.use(express.static('public'));
 app.use(express.json());
 app.use(expressSession({
     secret: 'session_secret',
@@ -100,13 +100,6 @@ app.get('/gacha', (req, res) => { // render gacha page
 app.post('/api/collect', async (req, res) => {
     try {
         const catData = req.body;
-        console.log("line 99", catData);
-        //     cat_name VARCHAR(50) NOT NULL,
-        // cat_breed VARCHAR(50) NOT NULL,
-        // cat_origin VARCHAR(50) NOT NULL,
-        // cat_image VARCHAR(255) NOT NULL,    
-        // cat_types VARCHAR[] NOT NULL,
-        // cat_description TEXT NOT NULL,
         const result = await db.query(
             'INSERT INTO user_cats (user_id,cat_name, cat_breed, cat_origin, cat_image, cat_types, cat_description) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
             [req.session.userId, catData.cat_name, catData.cat_breed, catData.cat_origin, catData.cat_image, catData.cat_types, catData.cat_description]

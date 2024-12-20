@@ -9,7 +9,6 @@ const rollGacha = async () => {
     loader.style.display = 'block';
     cat_api_section.style.display = 'none';
     gacha_collection_btn.style.display = 'none';
-
     try {
         const response = await axios.get("https://api.thecatapi.com/v1/images/search", {
             headers, params: {
