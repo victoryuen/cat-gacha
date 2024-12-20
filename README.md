@@ -28,11 +28,11 @@ npm install
 #### Create PostgreSQL Database
 
 ```sql
-# Access PostgreSQL prompt
+# Access PostgreSQL prompt with your postgres root user
 psql
 
 # Create database user (if not exists)
-CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'your_secure_password';
+CREATE ROLE john123 WITH LOGIN SUPERUSER PASSWORD '12345';
 
 # Create database
 CREATE DATABASE cat_gacha_local;
@@ -47,8 +47,6 @@ CREATE DATABASE cat_gacha_local;
 # Run schema script
 psql -U postgres -d cat_gacha_local -f db/schema.sql
 
-# Seed initial data
-psql -U postgres -d cat_gacha_local -f db/seed.sql
 ```
 
 ### 4. Environment Configuration

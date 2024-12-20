@@ -2,7 +2,7 @@ import express from "express";
 import pg from "pg";
 import expressSession from "express-session";
 const db = new pg.Client({
-    user: "postgres",
+    user: "john123",
     host: "localhost",
     database: "cat_gacha_local",
     password: "12345",
@@ -47,6 +47,14 @@ app.post('/signup', async (req, res) => { // handle signup POST request
         const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
         if (result.rowCount > 0) {
             res.render('signup', { error: 'Username already exists' }); // render signup page with error message if username already exists
+        }
+    } catch (err) {
+        console.error('Error executing query:', err); // log error if query execution fails
+    }
+    try {
+        const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (result.rowCount > 0) {
+            res.render('signup', { error: 'Email already exists' }); // render signup page with error message if email already exists
         }
     } catch (err) {
         console.error('Error executing query:', err); // log error if query execution fails
