@@ -25,7 +25,7 @@ app.use(expressSession({
 }));
 
 const hostname = "127.0.0.1";
-const port = 5500;
+const port = process.env.PORT || 4000;
 
 
 app.get('/', (req, res) => { // render index page
