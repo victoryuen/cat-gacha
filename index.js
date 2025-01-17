@@ -1,5 +1,6 @@
 import express from "express";
 import pg from "pg";
+import expressSession from "express-session"
 import connectPgSimple from "connect-pg-simple";
 const pgSession = connectPgSimple(expressSession);
 const db = new pg.Client({
