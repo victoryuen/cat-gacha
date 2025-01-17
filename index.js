@@ -1,6 +1,6 @@
 import express from "express";
 import pg from "pg";
-import expressSession from "express-session";
+const pgSession = require('connect-pg-simple')(expressSession);
 const db = new pg.Client({
     user: "john123",
     host: "localhost",
@@ -15,13 +15,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json());
 app.use(expressSession({
-    secret: 'session_secret',
+    store: new pgSession({
+        pool: db, 
+    }),
+    secret: process.env.SESSION_SECRET || 'fallback_secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
-
-    }
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true, 
+        maxAge: 1000 * 60 * 60 * 24, 
+    },
 }));
 
 const hostname = "127.0.0.1";
