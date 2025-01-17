@@ -2,13 +2,10 @@ import express from "express";
 import pg from "pg";
 import expressSession from "express-session"
 import connectPgSimple from "connect-pg-simple";
+import 'dotenv/config';
 const pgSession = connectPgSimple(expressSession);
 const db = new pg.Client({
-    user: "john123",
-    host: "localhost",
-    database: "cat_gacha_local",
-    password: "12345",
-    port: 5432,
+    connectionString: process.env.DATABASE_URL,
 });
 
 db.connect();
@@ -138,6 +135,7 @@ app.post('/logout', (req, res) => {
 });
 app.listen(port, () => {
     console.log(`Express server listening on port ${port} `)
+    console.log(process.env.DATABASE_URL)
 });
 
 
