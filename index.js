@@ -1,6 +1,7 @@
 import express from "express";
 import pg from "pg";
-const pgSession = require('connect-pg-simple')(expressSession);
+import connectPgSimple from "connect-pg-simple";
+const pgSession = connectPgSimple(expressSession);
 const db = new pg.Client({
     user: "john123",
     host: "localhost",
