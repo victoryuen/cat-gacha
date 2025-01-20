@@ -45,7 +45,7 @@ CREATE DATABASE cat_gacha_local;
 
 ```bash
 # Run schema script
-psql -U postgres -d cat_gacha_local -f db/schema.sql
+psql -U postgres -d cat_gacha_local -f db/schema.psql
 
 ```
 
@@ -59,6 +59,8 @@ DB_PASSWORD=your_secure_password
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=cat_gacha_local
+DATABASE_URL = postgresql://postgres.qorxlqcsedufmxguguma:catgachastuff@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+NODE_ENV = development
 ```
 
 ### 5. Start the Server

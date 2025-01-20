@@ -3,31 +3,42 @@ import pg from "pg";
 import expressSession from "express-session"
 import connectPgSimple from "connect-pg-simple";
 import 'dotenv/config';
-const pgSession = connectPgSimple(expressSession);
-const db = new pg.Client({
+let db;
+if (process.env.NODE_ENV === "production"){
+    const pgSession = connectPgSimple(expressSession);
+     db = new pg.Client({
     connectionString: process.env.DATABASE_URL,
 });
-
+}
+else if(process.env.NODE_ENV === "development"){
+     db = new pg.Client({
+        user: 'postgres',
+        host: "localhost",
+        database: "cat_gacha_local",
+        password: "12345",
+    });
+}
 db.connect();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json());
-app.use(expressSession({
-    store: new pgSession({
-        pool: db, 
-    }),
-    secret: process.env.SESSION_SECRET || 'fallback_secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true, 
-        maxAge: 1000 * 60 * 60 * 24, 
-    },
-}));
-
-const hostname = "127.0.0.1";
+if (process.env.NODE_ENV === 'production'){
+    app.use(expressSession({
+        store: new pgSession({
+            pool: db, 
+        }),
+        secret: process.env.SESSION_SECRET || 'fallback_secret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: true,
+            httpOnly: true, 
+            maxAge: 1000 * 60 * 60 * 24, 
+        },
+    }));
+}
+ 
 const port = process.env.PORT || 4000;
 
 
@@ -41,7 +52,7 @@ app.get('/', (req, res) => { // render index page
 
 app.get('/signup', (req, res) => { // render signup page
     res.render('signup', {
-        loggedIn: req.session.loggedIn || false
+        // loggedIn: req.session.loggedIn || false
     });
 });
 app.post('/signup', async (req, res) => { // handle signup POST request
@@ -79,7 +90,7 @@ app.post('/signup', async (req, res) => { // handle signup POST request
 });
 app.get('/login', (req, res) => { // render login page
     res.render('login', {
-        loggedIn: req.session.loggedIn || false
+        // loggedIn: req.session.loggedIn || false
     });
 });
 app.post('/login', async (req, res) => { // handle login POST request
@@ -135,7 +146,6 @@ app.post('/logout', (req, res) => {
 });
 app.listen(port, () => {
     console.log(`Express server listening on port ${port} `)
-    console.log(process.env.DATABASE_URL)
 });
 
 
