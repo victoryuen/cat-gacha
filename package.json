@@ -17,7 +17,7 @@
     "nodemon": "^3.1.9"
   },
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "dev": "browser-sync start --proxy localhost:5500 --files \"public/**/*.css, views/**/*.ejs\""
   }
 }
