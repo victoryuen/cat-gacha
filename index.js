@@ -2,49 +2,76 @@ import express from "express";
 import pg from "pg";
 import expressSession from "express-session"
 import connectPgSimple from "connect-pg-simple";
+
 import 'dotenv/config';
 let db;
-if (process.env.NODE_ENV === "production"){
+let postgreStore;
+
+if (process.env.NODE_ENV === "production") {
+    console.log = function(){};
+    console.log("Connecting to production database...");
+
+    const pool = new pg.Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+    });
+
+    db = new pg.Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+    });
+
     const pgSession = connectPgSimple(expressSession);
-     db = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-});
-}
-else if(process.env.NODE_ENV === "development"){
-     db = new pg.Client({
+    postgreStore = new pgSession({
+        pool,
+        createTableIfMissing: true,
+    });
+} else {
+    console.log("Connecting to development database...");
+
+    db = new Client({
         user: 'postgres',
         host: "localhost",
         database: "cat_gacha_local",
         password: "12345",
     });
 }
+
 db.connect();
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
 app.use(express.json());
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.set('trust proxy', 1);
 if (process.env.NODE_ENV === 'production'){
     app.use(expressSession({
-        store: new pgSession({
-            pool: db, 
-        }),
+        store: postgreStore,
         secret: process.env.SESSION_SECRET || 'fallback_secret',
-        resave: false,
-        saveUninitialized: false,
         cookie: {
-            secure: true,
+            secure: false,
             httpOnly: true, 
-            maxAge: 1000 * 60 * 60 * 24, 
+            maxAge: 1000 * 60 * 60, 
         },
+        createTableIfMising: true,
     }));
 }
+else{
+    app.use(expressSession({ secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized:false,
+        cookie: { maxAge: 1000 * 60 * 60 * 24 }}))
+}
+
  
 const port = process.env.PORT || 4000;
 
 
 app.get('/', (req, res) => { // render index page
+    console.log(req.sessionID)
+    console.log(req.session.username)
     res.render('index', {
-        username: req.session.username,
+        username: req.session.username || null,
         loggedIn: req.session.loggedIn || false,
         active: 'home'
     });
@@ -98,11 +125,14 @@ app.post('/login', async (req, res) => { // handle login POST request
     try {
         const result = await db.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
         if (result.rowCount > 0) {
+            console.log(req.session)
             req.session.userId = result.rows[0].id;
+            console.log(req.session.userId)
+
             req.session.username = username;
             req.session.loggedIn = true;
-            res.redirect('/');
-
+            
+            req.session.save()
         }
         else {
             res.render('login', { error: 'Invalid username or password' });
@@ -146,7 +176,5 @@ app.post('/logout', (req, res) => {
 });
 app.listen(port, () => {
     console.log(`Express server listening on port ${port} `)
+    console.log(process.env.DATABASE_URL)
 });
-
-
-app.set('view engine', 'ejs');
