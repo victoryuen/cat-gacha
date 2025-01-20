@@ -133,6 +133,7 @@ app.post('/login', async (req, res) => { // handle login POST request
             req.session.loggedIn = true;
             
             req.session.save()
+            res.redirect('/')
         }
         else {
             res.render('login', { error: 'Invalid username or password' });
