@@ -8,7 +8,7 @@ let db;
 let postgreStore;
 
 if (process.env.NODE_ENV === "production") {
-    console.log = function(){};
+
     console.log("Connecting to production database...");
 
     const pool = new pg.Pool({
