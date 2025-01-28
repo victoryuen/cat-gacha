@@ -3,7 +3,7 @@ import pg from "pg";
 import expressSession from "express-session"
 import connectPgSimple from "connect-pg-simple";
 import 'dotenv/config';
-import { Sequelize,Model,DataTypes} from "sequelize";
+import { Sequelize,Model,DataTypes, where} from "sequelize";
 let db;
 let postgreStore;
 let sequelize;
@@ -81,8 +81,8 @@ User.init(
     underscored: true,
     tableName:'users'}
 )
-await User.sync({ force: true });
-console.log('The table for the User model was just (re)created!');
+await User.sync();
+// console.log('The table for the User model was just (re)created!');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -183,25 +183,46 @@ app.get('/login', (req, res) => { // render login page
 });
 app.post('/login', async (req, res) => { // handle login POST request
     const { username, password } = req.body;
-    try {
-        const result = await db.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-        if (result.rowCount > 0) {
+    try{
+        var result = await User.findAll({
+            where: {
+                username:username,
+                password:password,              
+            }
+        })
+        
+        if (result.length > 0){
             console.log(req.session)
-            req.session.userId = result.rows[0].id;
+            req.session.userId = result[0].dataValues.id;
             console.log(req.session.userId)
-
             req.session.username = username;
             req.session.loggedIn = true;
             
             req.session.save()
             res.redirect('/')
         }
-        else {
-            res.render('login', { error: 'Invalid username or password' });
-        }
-    } catch (err) {
-        console.error('Error executing query:', err);
+
     }
+    catch(err){}
+    // try {
+    //     const result = await db.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
+    //     if (result.rowCount > 0) {
+    //         console.log(req.session)
+    //         req.session.userId = result.rows[0].id;
+    //         console.log(req.session.userId)
+
+    //         req.session.username = username;
+    //         req.session.loggedIn = true;
+            
+    //         req.session.save()
+    //         res.redirect('/')
+    //     }
+    //     else {
+    //         res.render('login', { error: 'Invalid username or password' });
+    //     }
+    // } catch (err) {
+    //     console.error('Error executing query:', err);
+    // }
 });
 
 app.get('/gacha', (req, res) => { // render gacha page
