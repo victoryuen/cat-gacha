@@ -2,11 +2,11 @@ import express from "express";
 import pg from "pg";
 import expressSession from "express-session"
 import connectPgSimple from "connect-pg-simple";
-
 import 'dotenv/config';
+import { Sequelize,Model,DataTypes, where} from "sequelize";
 let db;
 let postgreStore;
-
+let sequelize;
 if (process.env.NODE_ENV === "production") {
 
     console.log("Connecting to production database...");
@@ -28,16 +28,61 @@ if (process.env.NODE_ENV === "production") {
     });
 } else {
     console.log("Connecting to development database...");
-
-    db = new Client({
-        user: 'postgres',
-        host: "localhost",
-        database: "cat_gacha_local",
-        password: "12345",
-    });
+    sequelize = new Sequelize('cat_gacha_local','postgres','12345',{
+        host: 'localhost',
+        dialect: 'postgres'
+    })
+    // db = new pg.Client({
+    //     user: 'postgres',
+    //     host: "localhost",
+    //     database: "cat_gacha_local",
+    //     password: "12345",
+    // });
 }
+try {
+    await sequelize.authenticate();
+    console.log("Database connection has been established successfully.");
+} catch (error) {
+    console.error("Database connection failed:", error.message);
+}
+// db.connect();
 
-db.connect();
+class User extends Model{
+};
+User.init(
+    {
+        id:{
+            type: DataTypes.INTEGER,
+            autoIncrement:true,
+            primaryKey: true,
+            allowNull:false,
+            
+        },  
+        username:{
+            type:DataTypes.STRING,
+            allowNull:false,
+            unique:true,
+
+        },
+        email:{
+            type: DataTypes.STRING,
+            allowNull:false,
+            unique:true,
+        },
+        password:{
+            type:DataTypes.STRING,
+            allowNull:false,
+        },
+        
+
+    },  
+    {sequelize,
+    timestamps: true,
+    underscored: true,
+    tableName:'users'}
+)
+await User.sync();
+// console.log('The table for the User model was just (re)created!');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -68,8 +113,8 @@ const port = process.env.PORT || 4000;
 
 
 app.get('/', (req, res) => { // render index page
-    console.log(req.sessionID)
-    console.log(req.session.username)
+    // console.log(req.sessionID)
+    // console.log(req.session.username)
     res.render('index', {
         username: req.session.username || null,
         loggedIn: req.session.loggedIn || false,
@@ -84,34 +129,50 @@ app.get('/signup', (req, res) => { // render signup page
 });
 app.post('/signup', async (req, res) => { // handle signup POST request
     const { username, email, password, confirmPassword } = req.body;
+    // console.log(req.body)
     try {
-        const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-        if (result.rowCount > 0) {
-            res.render('signup', { error: 'Username already exists' }); // render signup page with error message if username already exists
+        var rows = await User.findAll({
+            where:{
+                username: username
+            }
+        })
+        if(rows.length > 0){
+            res.render('signup', { error: 'username already exists' }); // render signup page with error message if email already exists
         }
     } catch (err) {
         console.error('Error executing query:', err); // log error if query execution fails
     }
     try {
-        const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (result.rowCount > 0) {
-            res.render('signup', { error: 'Email already exists' }); // render signup page with error message if email already exists
+        var rows = await User.findAll({
+            where:{
+                email: email
+            }
+        })
+        if(rows.length > 0){
+            res.render('signup', { error: 'username already exists' }); // render signup page with error message if email already exists
         }
     } catch (err) {
         console.error('Error executing query:', err); // log error if query execution fails
     }
+    
     if (password != confirmPassword) {
         res.render('signup', { error: 'Password must be the same!' }) // render signup page with error message if password and confirm password do not match
     }
-    try {
-        const result = await db.query(
-            'INSERT INTO users (username, email,password) VALUES ($1, $2,$3) RETURNING *',
-            [username, email, password]
-        );
-        res.redirect('/login');
-    } catch (err) {
-        console.error('Error executing query:', err);
+    try{
+        var res = await User.create({username:username,email:email,password:password})
     }
+    catch(error){
+        console.log('error excecuting query',error)
+    }
+    // try {
+    //     const result = await db.query(
+    //         'INSERT INTO users (username, email,password) VALUES ($1, $2,$3) RETURNING *',
+    //         [username, email, password]
+    //     );
+    //     res.redirect('/login');
+    // } catch (err) {
+    //     console.error('Error executing query:', err);
+    // }
 
 
 });
@@ -122,25 +183,46 @@ app.get('/login', (req, res) => { // render login page
 });
 app.post('/login', async (req, res) => { // handle login POST request
     const { username, password } = req.body;
-    try {
-        const result = await db.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
-        if (result.rowCount > 0) {
+    try{
+        var result = await User.findAll({
+            where: {
+                username:username,
+                password:password,              
+            }
+        })
+        
+        if (result.length > 0){
             console.log(req.session)
-            req.session.userId = result.rows[0].id;
+            req.session.userId = result[0].dataValues.id;
             console.log(req.session.userId)
-
             req.session.username = username;
             req.session.loggedIn = true;
             
             req.session.save()
             res.redirect('/')
         }
-        else {
-            res.render('login', { error: 'Invalid username or password' });
-        }
-    } catch (err) {
-        console.error('Error executing query:', err);
+
     }
+    catch(err){}
+    // try {
+    //     const result = await db.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, password]);
+    //     if (result.rowCount > 0) {
+    //         console.log(req.session)
+    //         req.session.userId = result.rows[0].id;
+    //         console.log(req.session.userId)
+
+    //         req.session.username = username;
+    //         req.session.loggedIn = true;
+            
+    //         req.session.save()
+    //         res.redirect('/')
+    //     }
+    //     else {
+    //         res.render('login', { error: 'Invalid username or password' });
+    //     }
+    // } catch (err) {
+    //     console.error('Error executing query:', err);
+    // }
 });
 
 app.get('/gacha', (req, res) => { // render gacha page
